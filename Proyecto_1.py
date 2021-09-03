@@ -1,3 +1,4 @@
+dato = ""
 def ingDato():   
 
     cuatro = False
@@ -26,8 +27,8 @@ def ingDato():
                 octal = True
     
 
+def callFun():
     n10 = octToDec(dato)
-   
     datoBin = octToBin(n10) #Llama la función que convierte a binario. Esa función recibe el dato en decimal y lo devuelve de tipo bin
     octToHex(n10) #Llama la función que convierte a hexadecimal. Esa función recibe el dato en decimal y lo devuelve de tipo hex
     nrzi(datoBin) #Llama la funcion que hace la conversión a codigo nrzi
