@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 
 root = Tk()
 
+par = 0
+
 root.title("Proyecto 1 de Diseño Lógico")
 
 #Base
@@ -31,6 +33,24 @@ def segundaParte():
     nr.grid(row = 6, column = 0, columnspan = 2)
     nrzbut = Button(root, text = "Generar grafica de NRZI", command = lambda:crearGrafico(nrzi(octToBin(octToDec(n.get())))))
     nrzbut.grid(row = 6, column = 1)
+
+    bits = nrzi(octToBin(octToDec(n.get())))
+
+    extra = Label(root, text = "")
+    extra.grid(row = 8, column = 0, columnspan = 3)
+
+    paridadtit = Label(root, text = "Elija el tipo de Paridad")
+    paridadtit.grid(row = 9, column = 0, columnspan = 2)
+
+    paridadpar = Button(root, text = "Paridad Par")
+    paridadpar.grid( row = 9, column = 2)
+
+    paridadimpar = Button(root, text = "Paridad Impar")
+    paridadimpar.grid( row = 9, column = 3)
+
+    
+
+
 
 #Crea la tabla de conversiones
 def genTabla(hex,bin,dec):
