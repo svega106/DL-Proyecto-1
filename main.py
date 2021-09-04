@@ -1,6 +1,5 @@
 par=int(input("Presione 1 para paridad par y 0 para impar: "))
 
-
 bits = [1,0,1,0,0,1,0,1,1,1,0,1]
 
 ##Posiciones a examinar para determinar pariedad

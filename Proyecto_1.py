@@ -25,13 +25,11 @@ def ingDato():
                 print("Numero NO es Octal, favor ingrese otro numero")
             else:
                 octal = True
+                n10 = octToDec(dato)
+                datoBin = octToBin(n10) #Llama la función que convierte a binario. Esa función recibe el dato en decimal y lo devuelve de tipo bin
+                octToHex(n10) #Llama la función que convierte a hexadecimal. Esa función recibe el dato en decimal y lo devuelve de tipo hex
+                nrzi(datoBin) #Llama la funcion que hace la conversión a codigo nrzi    
     
-
-def callFun():
-    n10 = octToDec(dato)
-    datoBin = octToBin(n10) #Llama la función que convierte a binario. Esa función recibe el dato en decimal y lo devuelve de tipo bin
-    octToHex(n10) #Llama la función que convierte a hexadecimal. Esa función recibe el dato en decimal y lo devuelve de tipo hex
-    nrzi(datoBin) #Llama la funcion que hace la conversión a codigo nrzi
     
 #Pasar numero octal a base 10
 def octToDec(dato):
