@@ -12,10 +12,6 @@ par = 0
 
 root.title("Proyecto 1 de Diseño Lógico")
 
-#Base
-#canvas = tk.Canvas(root, width =  700, height = 600)
-#canvas.grid(columnspan = 3,rowspan = 2)
-
 #Ingresar texto y calcular
 tit = Label(root, text= "Favor ingresar un numero octal de 4 digitos unicamente")
 tit.grid(row=0, column=0, columnspan = 3)
@@ -52,15 +48,24 @@ def segundaParte():
     paridadimpar.grid( row = 9, column = 3)
 
     def paridad(pari):
+        bits2 = []
+        bits2 = bits
+
         par = pari
         paridadtit = Label(root, text = par)
         paridadtit.grid(row = 10, column = 0, columnspan = 2)
 
-        bits.insert(0,0)
-        bits.insert(1,0)
-        bits.insert(3,0)
-        bits.insert(7,0)
-        bits.insert(15,0)
+        if len(bits2) == 17:
+            posicionesparidad = [0,1,3,7,15]
+            for i in posicionesparidad:
+                bits[i] = 0
+        
+        else:
+            bits2.insert(0,0)
+            bits2.insert(1,0)
+            bits2.insert(3,0)
+            bits2.insert(7,0)
+            bits2.insert(15,0)
 
         ##Posiciones a examinar
         p1=[2,4,6,8,10,12,14,16]
@@ -77,14 +82,14 @@ def segundaParte():
             ones=0
             n=n+1
             for i in a:
-                ones=bits[i]+ones
+                ones=bits2[i]+ones
 
             if par==0:
                 if (ones%2)!=0:
-                    bits[parpos]=1
+                    bits2[parpos]=1
             if par==1:
-                if (ones%2)==0:
-                    bits[parpos]=1
+                if (ones%2) ==0:
+                    bits2[parpos]=1
             parpos = 2**n-1
         if par==1:
             hola="par"
@@ -92,15 +97,15 @@ def segundaParte():
             hola="impar"
         texto = Label(root, text = "Estos son los valores de los bits con la paridad " + hola + ".")
         texto.grid(row = 10,column = 0)
-        bitsprint = Label(root, text = bits)
+        bitsprint = Label(root, text = bits2)
         bitsprint.grid(row = 10, column = 1)
 
-        tablaparidad = Button(root, text = "Mostrar Tabla de Paridad", command = lambda:root1(bits))
+        tablaparidad = Button(root, text = "Mostrar Tabla de Paridad", command = lambda:root1(bits2,par))
         tablaparidad.grid(row = 11, column = 0)
 
 
 
-def root1(bits):
+def root1(bits2,par):
     newWindow1 = Toplevel(root)
     newWindow1.title("Tabla de Paridad")
 
@@ -124,7 +129,7 @@ def root1(bits):
         n+=1
 
     n=2
-    for i in bits:
+    for i in bits2:
         l = Label(newWindow1, text=i).grid(row=7, column=n)
         n+=1
 
@@ -137,7 +142,7 @@ def root1(bits):
     for h in hbitse:
         for i in numeros:
             if i in h:
-                x = Label(newWindow1, text=bits[i]).grid(row=poxx, column=n)
+                x = Label(newWindow1, text=bits2[i]).grid(row=poxx, column=n)
             else:
                 x = Label(newWindow1, text="").grid(row=poxx, column=n)
             n += 1
@@ -148,7 +153,7 @@ def root1(bits):
     sin_paridad=[2,4,5,6,8,9,10,11,12,13,14,16]
     for i in numeros:
         if i in sin_paridad:
-            x = Label(newWindow1, text=bits[i]).grid(row=1, column=n)
+            x = Label(newWindow1, text=bits2[i]).grid(row=1, column=n)
         else:
             x = Label(newWindow1, text="").grid(row=1, column=n)
         n += 1
@@ -167,9 +172,10 @@ def root1(bits):
     tablaerror = Button(root, text = "Mostrar Tabla de Error con bit cambiado", command = lambda:error())
     tablaerror.grid(row = 12, column = 2 )
 
+
     def error():
-        bits2=bits
         map=[2,4,5,6,8,9,10,11,12,13,14,16]
+
         error=clicked.get()
         error=error-1
         if bits2[map[error]]==0:
@@ -198,6 +204,14 @@ def root1(bits):
                     fp[fpi]=1
             fpi=fpi+1
 
+        #if par == 1:
+           # for i in range(fp):
+              #  if fp[i] == 1:
+             #       fp[i] = 0
+              #  else:
+               #     fp[i] = 1
+
+        
         newWindow2 = Toplevel(root)
         newWindow2.title("Tabla de paridad con error")
 
@@ -214,7 +228,6 @@ def root1(bits):
             x = Label(newWindow2, text=i).grid(row=0, column=n)
             n+=1
 
-        bits2=[1,0,0,0,1,1,0,0,1,0,1,0,1,0,1,0,1]
         n=2
         for i in bits2:
             l = Label(newWindow2, text=i).grid(row=1, column=n)
@@ -244,9 +257,7 @@ def root1(bits):
             else:
                 y = Label(newWindow2, text="Error").grid(row=poxx, column=19)
                 y = Label(newWindow2, text=i).grid(row=poxx, column=20)
-            poxx+=1
-    
-    
+            poxx+=1    
 
 
 
