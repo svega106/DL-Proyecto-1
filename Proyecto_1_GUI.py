@@ -20,21 +20,24 @@ root.title("Proyecto 1 de Diseño Lógico")
 tit = Label(root, text= "Favor ingresar un numero octal de 4 digitos unicamente")
 tit.grid(row=0, column=0, columnspan = 3)
 
-n = Entry(root, width=45, borderwidth=5)
-n.grid(row = 1, column = 0 , columnspan = 1, padx = 10, pady = 10)
+num = Entry(root, width=45, borderwidth=5)
+num.grid(row = 1, column = 0 , columnspan = 1, padx = 10, pady = 10)
 
-cal = Button(root, text="Calcular",command = lambda:ingDato(n.get()))
+cal = Button(root, text="Calcular",command = lambda:ingDato(num.get()))
 cal.grid(row = 1, column = 2)
 
 def segundaParte():
     tit2 = Label(root, text = "Codificacion NRZI")
     tit2.grid(row = 5, column = 0, columnspan = 3)
-    nr = Label(root, text = nrzi(octToBin(octToDec(n.get()))))
+    nr = Label(root, text = nrzi(octToBin(octToDec(num.get()))))
     nr.grid(row = 6, column = 0, columnspan = 2)
-    nrzbut = Button(root, text = "Generar grafica de NRZI", command = lambda:crearGrafico(nrzi(octToBin(octToDec(n.get())))))
+    nrzbut = Button(root, text = "Generar grafica de NRZI", command = lambda:crearGrafico(nrzi(octToBin(octToDec(num.get())))))
     nrzbut.grid(row = 6, column = 1)
 
-    bits = nrzi(octToBin(octToDec(n.get())))
+    nrz = nrzi(octToBin(octToDec(num.get())))
+    bits = []
+    for i in nrz:
+        bits.append(int(i))
 
     extra = Label(root, text = "")
     extra.grid(row = 8, column = 0, columnspan = 3)
@@ -42,11 +45,212 @@ def segundaParte():
     paridadtit = Label(root, text = "Elija el tipo de Paridad")
     paridadtit.grid(row = 9, column = 0, columnspan = 2)
 
-    paridadpar = Button(root, text = "Paridad Par")
+    paridadpar = Button(root, text = "Paridad Par", command = lambda:paridad(1))
     paridadpar.grid( row = 9, column = 2)
 
-    paridadimpar = Button(root, text = "Paridad Impar")
+    paridadimpar = Button(root, text = "Paridad Impar",command = lambda:paridad(0))
     paridadimpar.grid( row = 9, column = 3)
+
+    def paridad(pari):
+        par = pari
+        paridadtit = Label(root, text = par)
+        paridadtit.grid(row = 10, column = 0, columnspan = 2)
+
+        bits.insert(0,0)
+        bits.insert(1,0)
+        bits.insert(3,0)
+        bits.insert(7,0)
+        bits.insert(15,0)
+
+        ##Posiciones a examinar
+        p1=[2,4,6,8,10,12,14,16]
+        p2=[2,5,6,9,10,13,14]
+        p3=[4,5,6,11,12,13,14]
+        p4=[8,9,10,11,12,13,14]
+        p5=[16]
+        hbits=[p1,p2,p3,p4,p5]
+        
+        ones=0
+        parpos=0
+        n=0
+        for a in hbits:
+            ones=0
+            n=n+1
+            for i in a:
+                ones=bits[i]+ones
+
+            if par==0:
+                if (ones%2)!=0:
+                    bits[parpos]=1
+            if par==1:
+                if (ones%2)==0:
+                    bits[parpos]=1
+            parpos = 2**n-1
+        if par==1:
+            hola="par"
+        else:
+            hola="impar"
+        texto = Label(root, text = "Estos son los valores de los bits con la paridad " + hola + ".")
+        texto.grid(row = 10,column = 0)
+        bitsprint = Label(root, text = bits)
+        bitsprint.grid(row = 10, column = 1)
+
+        tablaparidad = Button(root, text = "Mostrar Tabla de Paridad", command = lambda:root1(bits))
+        tablaparidad.grid(row = 11, column = 0)
+
+
+
+def root1(bits):
+    newWindow1 = Toplevel(root)
+    newWindow1.title("Tabla de Paridad")
+
+    p1e=[0,2,4,6,8,10,12,14,16]
+    p2e=[1,2,5,6,9,10,13,14]
+    p3e=[3,4,5,6,11,12,13,14]
+    p4e=[7,8,9,10,11,12,13,14]
+    p5e=[15,16]
+
+    hbitse=[p1e,p2e,p3e,p4e,p5e]
+
+    izquierda=["Sin paridad","p1","p2","p3","p4","p5","Con paridad"]
+    n=1
+    for i in izquierda:
+        x = Label(newWindow1, text=i).grid(row=n, column=0)
+        n+=1
+    denominacion=["","p1","p2","d1","p3","d2","d3", "d4", "p4","d5","d6","d7","d8","d9","d10","d11","p5","d12"]
+    n=1
+    for i in denominacion:
+        x = Label(newWindow1, text=i).grid(row=0, column=n)
+        n+=1
+
+    n=2
+    for i in bits:
+        l = Label(newWindow1, text=i).grid(row=7, column=n)
+        n+=1
+
+    numeros=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+    pos=0
+    poxx=2
+    n=2
+    xx=0
+
+    for h in hbitse:
+        for i in numeros:
+            if i in h:
+                x = Label(newWindow1, text=bits[i]).grid(row=poxx, column=n)
+            else:
+                x = Label(newWindow1, text="").grid(row=poxx, column=n)
+            n += 1
+            xx += 1
+        n=2
+        poxx+=1
+
+    sin_paridad=[2,4,5,6,8,9,10,11,12,13,14,16]
+    for i in numeros:
+        if i in sin_paridad:
+            x = Label(newWindow1, text=bits[i]).grid(row=1, column=n)
+        else:
+            x = Label(newWindow1, text="").grid(row=1, column=n)
+        n += 1
+        xx += 1
+
+    clicked = IntVar()
+    clicked.set(1)
+
+    title = Label(root, text = "Cual bit quiere cambiar?")
+    title.grid(row = 12, column = 0)
+
+    dropdown = OptionMenu(root, clicked, 1,2,3,4,5,6,7,8,9,10,11,12)
+    dropdown.grid(row = 12, column = 1)
+
+
+    tablaerror = Button(root, text = "Mostrar Tabla de Error con bit cambiado", command = lambda:error())
+    tablaerror.grid(row = 12, column = 2 )
+
+    def error():
+        bits2=bits
+        map=[2,4,5,6,8,9,10,11,12,13,14,16]
+        error=clicked.get()
+        error=error-1
+        if bits2[map[error]]==0:
+            bits2[map[error]]=1
+        else:
+            bits2[map[error]]=0
+
+        
+        bitsprint = Label(root, text = "Estos son los bits con el cambio de bit en la posición " + str(error+1) + ".")
+        bitsprint.grid(row = 13, column = 0)
+        printbits = Label(root, text = bits2)
+        printbits.grid(row = 13, column = 2)
+
+        fp=[0,0,0,0,0]
+        ones=0
+        fpi=0
+        for a in hbitse:
+            ones = 0
+            for i in a:
+                ones=bits2[i]+ones
+            if par==0:
+                if (ones % 2) != 0:
+                    fp[fpi]=1
+            if par==1:
+                if (ones % 2) == 0:
+                    fp[fpi]=1
+            fpi=fpi+1
+
+        newWindow2 = Toplevel(root)
+        newWindow2.title("Tabla de paridad con error")
+
+        izquierda=["Recibido","p1","p2","p3","p4","p5"]
+        denominacion=["","p1","p2","d1","p3","d2","d3", "d4", "p4","d5","d6","d7","d8","d9","d10","d11","p5","d12","Prueba de Paridad","Bit de paridad"]
+
+        n=1
+        for i in izquierda:
+            x = Label(newWindow2, text=i).grid(row=n, column=0)
+            n+=1
+
+        n=1
+        for i in denominacion:
+            x = Label(newWindow2, text=i).grid(row=0, column=n)
+            n+=1
+
+        bits2=[1,0,0,0,1,1,0,0,1,0,1,0,1,0,1,0,1]
+        n=2
+        for i in bits2:
+            l = Label(newWindow2, text=i).grid(row=1, column=n)
+            n+=1
+
+        pos=0
+        poxx=2
+        n=2
+        xx=0
+
+        for h in hbitse:
+            for i in numeros:
+                if i in h:
+                    x = Label(newWindow2, text=bits2[i]).grid(row=poxx, column=n)
+                else:
+                    x = Label(newWindow2, text="").grid(row=poxx, column=n)
+                n += 1
+                xx += 1
+            n=2
+            poxx+=1
+        poxx=2
+
+        for i in fp:
+            if i == 0:
+                x = Label(newWindow2, text="Correcto").grid(row=poxx, column=19)
+                xx = Label(newWindow2, text=i).grid(row=poxx, column=20)
+            else:
+                y = Label(newWindow2, text="Error").grid(row=poxx, column=19)
+                y = Label(newWindow2, text=i).grid(row=poxx, column=20)
+            poxx+=1
+    
+    
+
+
+
+    
 
     
 
@@ -97,7 +301,6 @@ def ingDato(dato):
             genTabla(octToHex(ndeci),octToBin(ndeci),ndeci)
             segundaParte()
             
-
 #Convierte el numero en Decimal
 def octToDec(dato):
     dato = str(dato)
@@ -145,6 +348,7 @@ def octToHex(n10):
 
     return nhex
 
+#Crea el codigo NRZI
 def nrzi(datoBin):
     valAnt = '1'  #inico de la señal en alto o bajo, alto = 1, bajo = 0
     datoBin = str(datoBin) #el dato es entero, se comvierte a texto para manerjarlo de manera mas facil
@@ -167,7 +371,8 @@ def nrzi(datoBin):
             valAnt = valAnt
     return nrziCode
 
-def dif(d):#funcion que devuelve el caracter contrario a otro caracter
+#funcion que devuelve el caracter contrario a otro caracter
+def dif(d):
 
     x = str(d)
     if x == '1':
@@ -233,6 +438,5 @@ def crearGrafico(nrziCode):
         plt.show()  #muestra el grafico
     else:
         print("Error interno, no se puede graficar porque la cantidad de nrziCodes de x y de y son distitos")
-
 
 root.mainloop()
